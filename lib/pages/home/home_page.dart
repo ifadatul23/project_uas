@@ -1,35 +1,53 @@
 import 'package:flutter/material.dart';
+import '../cart/cart_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, String>> menuItems = [
-      {
-        'name': 'Burger Special',
-        'price': 'Rp 25.000',
-        'image': 'assets/images/burger.png',
-      },
-      {
-        'name': 'Pizza Mozarella',
-        'price': 'Rp 40.000',
-        'image': 'assets/images/pizza.png',
-      },
-      {
-        'name': 'Ayam Geprek',
-        'price': 'Rp 22.000',
-        'image': 'assets/images/ayam_geprek.png',
-      },
-    ];
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  final List<Map<String, String>> menuItems = [
+    {
+      'name': 'Burger Special',
+      'price': 'Rp 25.000',
+      'image': 'assets/images/burger.png',
+    },
+    {
+      'name': 'Pizza Mozarella',
+      'price': 'Rp 40.000',
+      'image': 'assets/images/pizza.png',
+    },
+    {
+      'name': 'Ayam Geprek',
+      'price': 'Rp 22.000',
+      'image': 'assets/images/ayam_geprek.png',
+    },
+  ];
+
+  List<Map<String, String>> cartItems = [];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       appBar: AppBar(
         backgroundColor: const Color(0xFF2B7A74),
         title: const Text('Daftar Menu - Makanan'),
         actions: [
-          IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartPage(cartItems: cartItems),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: Column(
@@ -60,7 +78,7 @@ class HomePage extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.9,
               ),
               itemCount: menuItems.length,
               itemBuilder: (context, index) {
@@ -80,7 +98,7 @@ class HomePage extends StatelessWidget {
                         ),
                         child: Image.asset(
                           item['image']!,
-                          height: 110,
+                          height: 120, //
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -104,29 +122,30 @@ class HomePage extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        '${item['name']} dimasukkan ke keranjang',
-                                      ),
+                            const SizedBox(height: 10),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  cartItems.add(item);
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${item['name']} dimasukkan ke keranjang',
                                     ),
-                                  );
-                                },
-                                icon: const Icon(Icons.add_shopping_cart),
-                                label: const Text('Tambah ke Keranjang'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF2B7A74),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
                                   ),
-                                  textStyle: const TextStyle(fontSize: 13),
+                                );
+                              },
+                              icon: const Icon(Icons.add_shopping_cart),
+                              label: const Text('Masukkan Keranjang'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF2B7A74),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
                                 ),
+                                minimumSize: const Size.fromHeight(36),
+                                textStyle: const TextStyle(fontSize: 13),
                               ),
                             ),
                           ],
